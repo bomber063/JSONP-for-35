@@ -1,0 +1,20 @@
+<title>首页</title>
+<link rel="stylesheet" href="/style.css">
+<!-- <h5>你好，这是我的第一个页面</h5> -->
+<h5>您的账户余额是<span id="amount">100</span></h5>
+<button id="button">付款1块钱</button>
+<script>
+  button.addEventListener('click',function(e){
+    let n=amount.innerText
+    let number=parseInt(n,10)
+    let newNumber=number-1
+    amount.innerText=newNumber
+  })
+</script>
+<!-- <script >
+  function xxx(){
+    alert('我是xxx')
+  }
+</script>
+<script src="/main.js?callback=xxx"></script> -->
+
