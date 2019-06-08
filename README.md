@@ -37,7 +37,7 @@
 > 如果在浏览器输入http://localhost:8888，后面的路径不是以上三个，那么就会在开发者工具里面显示404代码——response.statusCode = 404
 ,并会返回找不到对应的路径，你需要自行修改 index.js——response.write('找不到对应的路径，你需要自行修改 index.js')
 
-* 用到的node.js代码说明:
+* 用到的node.js的API说明:
 1. [fs.readFileSync](http://nodejs.cn/api/fs.html#fs_fs_readfilesync_path_options)，简单理解就是**同步**读取某个路径的文件。
 2. [response.setHeader](http://nodejs.cn/api/http.html#http_response_setheader_name_value)，简单理解就是响应头的名字和格式。
 3. [response.write](http://nodejs.cn/api/http.html#http_response_write_chunk_encoding_callback)，简单理解就是服务器会返回给前端写下的东西并显示在浏览器上。
@@ -83,18 +83,17 @@
 ```
 * 此时响应还是没有改变数据库，也就是db文件里面的100,所以就算点击按钮后会以此减少1，**但是刷新后**还是会显示100。
 
-<!-- ### 前端点击按钮后告诉服务器，请把后端的数据库里面存的100减少1，然后再自动当前刷新页面
+### 前端点击按钮后告诉服务器，请把后端的数据库里面存的100减少1。
 * 因为**要提交数据，那么需要前端发出一个post请求**，而get请求是读取信息，前面了解过，JS目前做不到，但是html语言的form标签就可以发post请求。此时前端的JS代码也可以删除，因为不需要JS来改变这个数字100。
 * 前端代码需要修改为
 ```
 <form action="/pay" method="post">
-  <input type="text" name='number' value="1">
   <input type="submit" value="付款1元">
 </form>
 ```
 * [form](https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/form)
 * action
-> 一个处理这个form信息的程序所在的URL。这个值可以被 <button> 或者 <input> 元素中的 formaction 属性重载（覆盖）。可以理解为路径  
+> 一个处理这个form信息的程序所在的URL。这个值可以被 <button> 或者 <input> 元素中的 formaction 属性重载（覆盖）。可以理解为路径，**这里的路径要和后端的path路径一致**。  
 * method
 > 浏览器使用这种 HTTP 方式来提交 form. 可能的值有:  
 post: 指的是 HTTP POST 方法 ; 表单数据会包含在表单体内然后发送给服务器.  
@@ -107,4 +106,18 @@ get: 指的是 HTTP GET 方法; 表单数据会附加在 action 属性的URI中�
 * value
 > 控件的初始值. 此属性是可选的，除非type 属性是radio或checkbox。注意，当重新加载页面时，如果在重新加载之前更改了值，[Gecko和IE将忽略HTML源代码中指定的值](https://bugzilla.mozilla.org/show_bug.cgi?id=46845#c186)。
 
-* 后端修改的代码 -->
+* 后端修改的代码
+```
+else if(path==='/pay' && method.toUpperCase()==='POST'){
+    var amount=fs.readFileSync('./db', 'utf8') //文件数据里面存的100
+    var newAmout=amount-1
+    fs.writeFileSync('./db',newAmout)//重新往文件数据中写入一个新的数字
+    response.write('success')//告诉用户付款成功
+    response.end()
+  }
+```
+* **后端这里的path路径/pay要和前端的action路径/pay一致**。
+* 用到的node.js的API说明:
+1. [fs.writeFileSync](http://nodejs.cn/api/fs.html#fs_fs_writefilesync_file_data_options),简单理解就是**同步**在某个路径写入一个数据。
+
+* 此时实现的效果就是后端的文件数据库里面的100会在按钮按下后减一，但是会显示success，需要返回上一级查看减少后的金额，并且如果浏览器存在缓存还需要刷新页面，是不是显得比较麻烦呢。
