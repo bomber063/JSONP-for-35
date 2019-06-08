@@ -1,16 +1,21 @@
 <title>首页</title>
 <link rel="stylesheet" href="/style.css">
-<!-- <h5>你好，这是我的第一个页面</h5> -->
-<h5>您的账户余额是<span id="amount">100</span></h5>
-<button id="button">付款1块钱</button>
+<h5>你好，这是我的第一个页面</h5>
+ <h5>您的账户余额是<span id="amount">&&&amount&&&</span></h5>
+ 
+<!-- <form action="/pay" method="post">
+  <input type="text" name='number' value="1">
+  <input type="submit" value="付款1元">
+</form>  -->
+<button id='button'>付款1元</button>
 <script>
   button.addEventListener('click',function(e){
-    let n=amount.innerText
+    let n=amount.innerText//n的类型是字符串
     let number=parseInt(n,10)
     let newNumber=number-1
     amount.innerText=newNumber
   })
-</script>
+</script> 
 <!-- <script >
   function xxx(){
     alert('我是xxx')

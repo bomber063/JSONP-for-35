@@ -15,7 +15,9 @@ var server = http.createServer(function(request, response){
   //从这里开始看，上面不要看
 
   if(path === '/'){  // 如果用户请求的是 / 路径
-    var string = fs.readFileSync('./index.html', 'utf8')  
+    var string = fs.readFileSync('./index.html', 'utf8') 
+    var amount = fs.readFileSync('./db', 'utf8')//db的类型是字符串
+    string=string.replace('&&&amount&&&',amount)//代表把前端的占位符&&&amount&&&替换为后端的amount
     response.setHeader('Content-Type', 'text/html;charset=utf-8')  
     response.write(string)
     response.end()   
