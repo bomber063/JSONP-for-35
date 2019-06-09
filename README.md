@@ -143,3 +143,18 @@ else if(path==='/pay' && method.toUpperCase()==='POST'){
 * 以上的代码都是旧时代（大约在2005年之前）的前后端交互的代码，那个时候会显得很变扭体验和很不好，因为**每次成功后还需要返回上一个页面，并且刷新页面才能看到显示的数字**，是不是很麻烦。
 * 再次提醒**form表单一旦提交后会刷新当前页面,因为form有一个target属性，如果不写该属性。默认也会写上改属性为target='_self'，也就是当前页面重新加载(也就是刷新当前页面的意思)**，这里也可以自己简单测试一下，效果就是不写target的时候，与写上target='_self'的时候效果一样。
 
+### 我们可以通过一个iframe控制只刷新iframe的页面
+* [form](https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/form)标签的MDN中关于target还有一个iframename的属性——iframename: 返回值在指定[iframe](https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/iframe)中加载。
+* src
+> 要嵌入的页面的URL。使用值about:blank来嵌入符合同源策略的空页面。另请注意，以编程方式删除<iframe>src属性（例如via Element.removeAttribute()）会导致about:blank在Firefox（从版本65），基于Chromium的浏览器和Safari / iOS的框架中加载。
+
+* 前端代码修改如下：
+```
+<form action="/pay" method="post" target="aaa">
+  <input type="submit" value="付款1元">
+</form> 
+<iframe name='aaa'src="about:blank" frameborder="0" height="200"></iframe>
+```
+* 这样增加了一个iframe，并且设置name，在form中的target指向这个name,就使得刷新的时候不刷新当前页面，而是只刷新iframe页面，
+
+

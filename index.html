@@ -2,10 +2,11 @@
 <link rel="stylesheet" href="/style.css">
 <h5>你好，这是我的第一个页面</h5>
  <h5>您的账户余额是<span id="amount">&&&amount&&&</span></h5>
-<form action="/pay" method="post">
+<form action="/pay" method="post" target="aaa">
   <input type="submit" value="付款1元">
 </form> 
 <!-- <button id='button'>付款1元</button> -->
+<iframe name='aaa'src="about:blank" frameborder="0" height="200"></iframe>
 <script>
   button.addEventListener('click',function(e){
     let n=amount.innerText//n的类型是字符串
