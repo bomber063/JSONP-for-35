@@ -82,7 +82,7 @@
     string=string.replace('&&&amount&&&',amount)//代表把前端的占位符&&&amount&&&替换为后端的amount
 ```
 * 此时响应还是没有改变数据库，也就是db文件里面的100,所以就算点击按钮后会以此减少1，**但是刷新后**还是会显示100。
-
+* replace的情况[链接](https://stackoverflow.com/questions/21162097/node-js-string-replace-doesnt-work)，这个[replace](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/replace)是javascirpt里面的API，但是可以在node.js使用。
 ### 前端点击按钮后告诉服务器，请把后端的数据库里面存的100减少1。
 * 因为**要提交数据，那么需要前端发出一个post请求**，而get请求是读取信息，前面了解过，JS目前做不到，但是html语言的form标签就可以发post请求。此时前端的JS代码也可以删除，因为不需要JS来改变这个数字100。
 * 前端代码需要修改为
@@ -91,7 +91,7 @@
   <input type="submit" value="付款1元">
 </form>
 ```
-* [form](https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/form)
+* [form](https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/form)，需要注意一下**form表单一旦提交后会刷新当前页面**
 * action
 > 一个处理这个form信息的程序所在的URL。这个值可以被 <button> 或者 <input> 元素中的 formaction 属性重载（覆盖）。可以理解为路径，**这里的路径要和后端的path路径一致**。  
 * method
@@ -120,4 +120,26 @@ else if(path==='/pay' && method.toUpperCase()==='POST'){
 * 用到的node.js的API说明:
 1. [fs.writeFileSync](http://nodejs.cn/api/fs.html#fs_fs_writefilesync_file_data_options),简单理解就是**同步**在某个路径写入一个数据。
 
-* 此时实现的效果就是后端的文件数据库里面的100会在按钮按下后减一，但是会显示success，需要返回上一级查看减少后的金额，并且如果浏览器存在缓存还需要刷新页面，是不是显得比较麻烦呢。
+* 此时实现的效果就是后端的文件数据库里面的100会在按钮按下后减一，**但是会跳转到显示success的页面，需要返回上一个页面查看减少后的金额，并且如果浏览器存在缓存还需要刷新页面，是不是显得比较麻烦呢**。
+
+### 上面的修改代码是都显示成功，但是我们在测试下存在失败的情况
+* 我们在后端中用到javascirpt的一个[Math.random()](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Math/random)随机函数返回一个浮点,  伪随机数在范围[0，1).
+* 把后端代码修改为
+```
+else if(path==='/pay' && method.toUpperCase()==='POST'){
+    var amount=fs.readFileSync('./db', 'utf8') //文件数据里面存的100
+    var newAmout=amount-1
+    if(Math.random()>0.5){
+      fs.writeFileSync('./db',newAmout)//重新往文件数据中写入一个新的数字
+      response.write('success')//告诉用户付款成功
+    }else{
+      response.write('fail')//什么都没做，并告诉用户付款失败
+    }
+    response.end()
+  }
+```
+* 此时就有可能出现fail，并且返回上一个页面刷新（在没有自动清除缓存的前提下需要刷新页面）后减一不会减一，但是也可能成功后，返回上一个页面刷新（在没有自动清除缓存的前提下需要刷新页面）后减一。
+***
+* 以上的代码都是旧时代（大约在2005年之前）的前后端交互的代码，那个时候会显得很变扭体验和很不好，因为**每次成功后还需要返回上一个页面，并且刷新页面才能看到显示的数字**，是不是很麻烦。
+<!-- * 再次提醒**form表单一旦提交后会刷新当前页面** -->
+

@@ -34,8 +34,12 @@ var server = http.createServer(function(request, response){
   }else if(path==='/pay' && method.toUpperCase()==='POST'){
     var amount=fs.readFileSync('./db', 'utf8') //文件数据里面存的100
     var newAmout=amount-1
-    fs.writeFileSync('./db',newAmout)//重新往文件数据中写入一个新的数字
-    response.write('success')//告诉用户付款成功
+    if(Math.random()>0.5){
+      fs.writeFileSync('./db',newAmout)//重新往文件数据中写入一个新的数字
+      response.write('success')//告诉用户付款成功
+    }else{
+      response.write('fail')//什么都没做，并告诉用户付款失败
+    }
     response.end()
   }else{  
     response.statusCode = 404
