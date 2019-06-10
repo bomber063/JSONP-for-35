@@ -239,3 +239,35 @@ else if(path==='/pay' && method.toUpperCase()==='POST'){
     }
 ```
 
+### script需要注意的问题，就是这个标签是会执行的
+怎么理解呢，两点：
+1. 前端代码每次都会在DOM中生成一个script。
+2. 在后端中返回的script也会执行，并且使先于前端代码执行。
+* 我们打开开发者工具中的ELEMENTS可以看到多出一个
+```
+<script src="./pay"></script>
+```
+另外后端代码如果我们修改为一个供前端可以执行的script代码，比如后端代码修改为：
+```
+    response.write('alert("我是pay")')//script请求就写上提供前端可以执行的代码alert("我是pay")
+```
+* 此时会**先执行后端**里面写的代码'alert("我是pay")，**然后再执行前端**里面的代码alert('success'),那么前端和后端都在这里写出了执行代码，是不是有点多此一举，那么只需要写一个就好了，选择在后端写入该script的执行代码即可。而前端保留失败的时候执行的代码——onerror。也就是只要在服务器返回在浏览器执行的一段javascript的代码(字符串)即可。通过后端的write可以传到浏览器.
+* 那么前端可以把onload代码删除，放在后端(服务器)
+* 后端代码可以修改为需要刷新页面的代码
+```
+    response.write(`
+    alert("success")
+    window.location.reload()
+    `)//script请求就写上提供前端可以执行的代码，这里用到多行字符串
+```
+* 后端也可以修改为不需要刷新页面的代码,此体验是相对比较优化的
+```
+    response.write(`
+    amount.innerText=amount.innerText-1
+    `)//script请求就写上提供前端可以执行的代码，这里用到多行字符串
+```
+
+
+
+
+
