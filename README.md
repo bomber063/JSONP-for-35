@@ -69,7 +69,7 @@
 * db的后缀在git bash里面可以不用给出，没有太大的用处。
 * 此时后端的代码需要把这个100混进入，然后前端的代码需要获取到后端返回的这个100.
 
-## 初步实现过程
+## 初步实现过程 form发请求法来实现
 ### 前端代码中的100用一个占位符来表示，比如这个占位符是&&&amount&&&
 ```
 <h5>您的账户余额是<span id="amount">&&&amount&&&</span></h5>
@@ -158,7 +158,7 @@ else if(path==='/pay' && method.toUpperCase()==='POST'){
 * 这样增加了一个iframe，并且设置name，在form中的target指向这个name,就使得刷新的时候不刷新当前页面，而是只刷新iframe页面。
 *** 
 * 以上的防范都需要刷新页面，或者刷新iframe页面，并且都是用form表单提交的,也就是post方法发请求。那么除了form可以发请求，还有别的也可以尝试，比如a标签、img标签、link标签、script标签等。
-### 测试img标签来发请求
+## 测试img标签发请求来实现
 把前端代码改成
 ```
 <button id='button'>付款1元</button>
@@ -213,3 +213,29 @@ else if(path==='/pay' && method.toUpperCase()==='POST'){
       amount.innerText=amount.innerText-1
     }
 ```
+## 测试script标签发请求来实现
+* 相对于img来说，**script发请求必须要把它放到页面里面才能实现发请求的功能**，比如需要用到[appenChild()](https://developer.mozilla.org/zh-CN/docs/Web/API/Node/appendChild)这个API
+* 并且此方法后端响应中不需要返回一个图片，只需要返回一个空字符串也可以，所以可以看出请求会更快一些。
+* 前端代码修改为：
+```
+    let script = document.createElement('script')
+    script.src = './pay'
+    document.body.appendChild(script)//script发请求必须要把它放到页面里面才能实现发请求的功能
+    script.onload = function () {
+      alert('success')
+      amount.innerText = amount.innerText - 1
+    }
+    script.onerror = function () {
+      alert('fail')
+    }
+```
+* 后端代码修改为：
+```
+    if(Math.random()>0.5){
+      fs.writeFileSync('./db',newAmout)//重新往文件数据中写入一个新的数字
+      response.setHeader('Content-Type','application/javascript')//script请求需要把类型修改了
+      response.statusCode=200
+      response.write('')//script请求就写空字符串即可
+    }
+```
+

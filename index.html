@@ -1,7 +1,7 @@
 <title>首页</title>
 <link rel="stylesheet" href="/style.css">
 <h5>你好，这是我的第一个页面</h5>
- <h5>您的账户余额是<span id="amount">&&&amount&&&</span></h5>
+<h5>您的账户余额是<span id="amount">&&&amount&&&</span></h5>
 <!-- <form action="/pay" method="post" target="aaa">
   <input type="submit" value="付款1元">
 </form>  -->
@@ -14,23 +14,33 @@
   //   let newNumber=number-1
   //   amount.innerText=newNumber
   // })
-  button.addEventListener('click',function(e){
-    let img=document.createElement('img')
-    img.src='/pay'
-    img.onload=function(){
+  button.addEventListener('click', function (e) {
+    // let img=document.createElement('img')
+    // img.src='/pay'
+    // img.onload=function(){
+    //   alert('success')
+    //   amount.innerText=amount.innerText-1
+    // }
+    // img.onerror=function(){
+    //   alert('fail')
+    // }
+    //这里的alert提示成功与失败是给用户看到的，让用户了解到操作之后是成功了还是失败了。
+    let script = document.createElement('script')
+    script.src = './pay'
+    document.body.appendChild(script)//script发请求必须要把它放到页面里面才能实现发请求的功能
+    script.onload = function () {
       alert('success')
-      amount.innerText=amount.innerText-1
+      amount.innerText = amount.innerText - 1
     }
-    img.onerror=function(){
+    script.onerror = function () {
       alert('fail')
     }
-    //这里的alert提示成功与失败是给用户看到的，让用户了解到操作之后是成功了还是失败了。
+
   })
-</script> 
+</script>
 <!-- <script >
   function xxx(){
     alert('我是xxx')
   }
 </script>
 <script src="/main.js?callback=xxx"></script> -->
-
