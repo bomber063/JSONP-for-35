@@ -155,6 +155,37 @@ else if(path==='/pay' && method.toUpperCase()==='POST'){
 </form> 
 <iframe name='aaa'src="about:blank" frameborder="0" height="200"></iframe>
 ```
-* 这样增加了一个iframe，并且设置name，在form中的target指向这个name,就使得刷新的时候不刷新当前页面，而是只刷新iframe页面，
+* 这样增加了一个iframe，并且设置name，在form中的target指向这个name,就使得刷新的时候不刷新当前页面，而是只刷新iframe页面。
+*** 
+* 以上的防范都需要刷新页面，或者刷新iframe页面，并且都是用form表单提交的,也就是post方法发请求。那么除了form可以发请求，还有别的也可以尝试，比如a标签、img标签、link标签、script标签等。
+### 测试img标签来发请求
+把前端代码改成
+```
+<button id='button'>付款1元</button>
+<script> 
+  button.addEventListener('click',function(e){
+    let img=document.createElement('img')
+    img.src='/pay'
+  })
+</script>
+```
+* 这样之后我们通过点击button按钮后会看到开发者工具中的Network里面会有**一个路径为pay，并发出一个GET请求**。但是它的缺陷是没有办法来发出POST请求。
+接下来**我们需要知道图片请求成功的前后端如何实现，前端需要用到[onload](https://developer.mozilla.org/zh-CN/docs/Web/API/GlobalEventHandlers/onload)和[onerror](https://developer.mozilla.org/zh-CN/docs/Web/API/GlobalEventHandlers/onerror)**
+* GlobalEventHandlers mixin 的 onload 属性是一个事件处理程序用于处理Window, XMLHttpRequest, <img> 等元素的加载事件，当资源已加载时被触发。
+* 当一项资源（如<img>或<script>）加载失败，加载资源的元素会触发一个Event接口的error事件，并执行该元素上的onerror()处理函数。这些error事件不会向上冒泡到window，不过（至少在Firefox中）能被单一的window.addEventListener捕获。
+* **那么后端的也需要知道加载成功或者失败，此时需要用到状态码**
+* 如果用img发请求，让后端告诉你成功，必须要有真正的图片才可以，需要写出如下代码
+```
+    if(Math.random()>0.5){
+      fs.writeFileSync('./db',newAmout)//重新往文件数据中写入一个新的数字
+      response.setHeader('Content-Type','image/jpg')
+      response.statusCode=200
+      response.write(fs.readFileSync('./dog.jpg'))//必须是真的图片才可以实现img发请求，浏览器才会告诉你成功了。
+    }else{
+      response.statusCode=400
+      response.write('fail')//什么都没做，并告诉用户付款失败
+    }
+    response.end()
+```
 
 
