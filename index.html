@@ -28,12 +28,14 @@
     let script = document.createElement('script')
     script.src = './pay'
     document.body.appendChild(script)//script发请求必须要把它放到页面里面才能实现发请求的功能
-    // script.onload = function () {
+    script.onload = function (e) {
       // alert('success')
       // amount.innerText = amount.innerText - 1
-    // }
+      e.currentTarget.remove()
+    }
     script.onerror = function () {
       alert('fail')
+      e.currentTarget.remove()
     }
 
   })

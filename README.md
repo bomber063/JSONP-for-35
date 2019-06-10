@@ -157,7 +157,7 @@ else if(path==='/pay' && method.toUpperCase()==='POST'){
 ```
 * 这样增加了一个iframe，并且设置name，在form中的target指向这个name,就使得刷新的时候不刷新当前页面，而是只刷新iframe页面。
 *** 
-* 以上的防范都需要刷新页面，或者刷新iframe页面，并且都是用form表单提交的,也就是post方法发请求。那么除了form可以发请求，还有别的也可以尝试，比如a标签、img标签、link标签、script标签等。
+* 以上的防范都需要刷新页面，或者刷新iframe页面，并且都是用form表单提交的,也就是post方法发请求。那么除了form可以发请求，还有别的也可以尝试，比如a标签、img标签、link标签、script标签等。这些都是**get请求**。
 ## 测试img标签发请求来实现
 把前端代码改成
 ```
@@ -253,19 +253,47 @@ else if(path==='/pay' && method.toUpperCase()==='POST'){
 ```
 * 此时会**先执行后端**里面写的代码'alert("我是pay")，**然后再执行前端**里面的代码alert('success'),那么前端和后端都在这里写出了执行代码，是不是有点多此一举，那么只需要写一个就好了，选择在后端写入该script的执行代码即可。而前端保留失败的时候执行的代码——onerror。也就是只要在服务器返回在浏览器执行的一段javascript的代码(字符串)即可。通过后端的write可以传到浏览器.
 * 那么前端可以把onload代码删除，放在后端(服务器)
-* 后端代码可以修改为需要刷新页面的代码
+* 后端代码可以修改为**需要刷新页面的代码**
 ```
     response.write(`
     alert("success")
     window.location.reload()
     `)//script请求就写上提供前端可以执行的代码，这里用到多行字符串
 ```
-* 后端也可以修改为不需要刷新页面的代码,此体验是相对比较优化的
+* 后端也可以修改为**不需要刷新页面的代码,此体验是相对比较优化的**
 ```
     response.write(`
     amount.innerText=amount.innerText-1
     `)//script请求就写上提供前端可以执行的代码，这里用到多行字符串
 ```
+***
+### 解决一个小问题，每次都会添加script，那么添加后删除即可
+* 在前端部分使用[remove](https://developer.mozilla.org/zh-CN/docs/Web/API/ChildNode/remove)这个API
+* [debugger](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Statements/debugger) 语句调用任何可用的调试功能，例如设置断点。 如果没有调试功能可用，则此语句不起作用。
+* 前端部分代码为
+```
+    document.body.appendChild(script)//script发请求必须要把它放到页面里面才能实现发请求的功能
+    script.onload = function (e) {
+      debugger//这个debugger只是用来断点调试,可以删除掉
+      e.currentTarget.remove()
+    }
+```
+* 执行上面的代码后，**script的变量还在内存中，但是script这个标签在DOM中被删除啦**。
+***
+* 再次提醒，后端中的代码能够执行javascript有两个条件。
+```
+    response.write(`
+    amount.innerText=amount.innerText-1
+    `)//script请求就写上提供前端可以执行的代码，这里用到多行字符串
+```
+1. 会被javascript执行，是基于http协议，并且后端前面代码也写了这句
+```
+    response.setHeader('Content-Type', 'application/javascript')//script请求需要把类型修改了
+```
+2. 前端把script的路径放到script标签里面，也就是script的路径就是script.scr='./pay'
+这样浏览器就会认为这个javascirpt是刚刚创建的，所以就去执行它啦。
+***
+* 上面的这个方案叫做**SRJ(Server rendered javascript),也就是服务器返回的javascript。**不是前端写的javascirpt，而是后台服务器返回的javascirpt。这个是在AJAX出现之前一些厉害的**后端程序员想出来的无刷新，局部更新页面内容的方案**。
 
 
 
