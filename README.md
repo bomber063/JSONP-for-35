@@ -69,7 +69,7 @@
 * db的后缀在git bash里面可以不用给出，没有太大的用处。
 * 此时后端的代码需要把这个100混进入，然后前端的代码需要获取到后端返回的这个100.
 
-##初步实现过程
+## 初步实现过程
 ### 前端代码中的100用一个占位符来表示，比如这个占位符是&&&amount&&&
 ```
 <h5>您的账户余额是<span id="amount">&&&amount&&&</span></h5>
@@ -174,7 +174,7 @@ else if(path==='/pay' && method.toUpperCase()==='POST'){
 * GlobalEventHandlers mixin 的 onload 属性是一个事件处理程序用于处理Window, XMLHttpRequest, <img> 等元素的加载事件，当资源已加载时被触发。
 * 当一项资源（如<img>或<script>）加载失败，加载资源的元素会触发一个Event接口的error事件，并执行该元素上的onerror()处理函数。这些error事件不会向上冒泡到window，不过（至少在Firefox中）能被单一的window.addEventListener捕获。
 * **那么后端的也需要知道加载成功或者失败，此时需要用到状态码**
-* 如果用img发请求，让后端告诉你成功，必须要有真正的图片才可以，需要写出如下代码
+如果用img发请求，让后端告诉你成功，必须要有真正的图片才可以，需要后端写出如下代码
 ```
     if(Math.random()>0.5){
       fs.writeFileSync('./db',newAmout)//重新往文件数据中写入一个新的数字
@@ -186,6 +186,20 @@ else if(path==='/pay' && method.toUpperCase()==='POST'){
       response.write('fail')//什么都没做，并告诉用户付款失败
     }
     response.end()
+```
+***
+### 目前实现了的效果需要手动刷新页面，那么我们在前端部分增加API使得能否自动刷新。
+* [Location](https://developer.mozilla.org/zh-CN/docs/Web/API/Location) 接口表示其链接到的对象的位置（URL）。所做的修改反映在与之相关的对象上。 Document 和 Window 接口都有这样一个链接的Location，分别通过 Document.location和Window.location 访问。
+* [window.location](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/location) 只读属性，返回一个 Location  对象，其中包含有关文档当前位置的信息。
+> window.location : 所有字母必须小写！
+> 尽管 window.location 是一个只读 Location 对象，你仍然可以赋给它一个 DOMString。这意味着您可以在大多数情况下处理 location，就像它是一个字符串一样：window.location = 'http://www.example.com'，是 window.location.href = 'http://www.example.com'的同义词 。
+* [Location​.reload()](https://developer.mozilla.org/zh-CN/docs/Web/API/Location/reload)方法用来刷新当前页面。该方法只有一个参数，当值为 true 时，将强制浏览器从服务器加载页面资源，当值为 false 或者未传参时，浏览器则可能从缓存中读取页面。
+* 前端部分代码增加一条使得
+```
+    img.onload=function(){
+      alert('success')
+      window.location.reload()
+    }
 ```
 
 
