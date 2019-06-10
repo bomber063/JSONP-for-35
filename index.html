@@ -19,7 +19,7 @@
     img.src='/pay'
     img.onload=function(){
       alert('success')
-      window.location.reload()
+      amount.innerText=amount.innerText-1
     }
     img.onerror=function(){
       alert('fail')

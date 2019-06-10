@@ -188,7 +188,7 @@ else if(path==='/pay' && method.toUpperCase()==='POST'){
     response.end()
 ```
 ***
-### 目前实现了的效果需要手动刷新页面，那么我们在前端部分增加API使得能否自动刷新。
+### 目前实现了的效果需要手动刷新页面，那么我们在前端部分增加API使得能够自动刷新。
 * [Location](https://developer.mozilla.org/zh-CN/docs/Web/API/Location) 接口表示其链接到的对象的位置（URL）。所做的修改反映在与之相关的对象上。 Document 和 Window 接口都有这样一个链接的Location，分别通过 Document.location和Window.location 访问。
 * [window.location](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/location) 只读属性，返回一个 Location  对象，其中包含有关文档当前位置的信息。
 > window.location : 所有字母必须小写！
@@ -201,5 +201,15 @@ else if(path==='/pay' && method.toUpperCase()==='POST'){
       window.location.reload()
     }
 ```
-
-
+***
+* 目前为止还**存在一个问题，就是刷新了页面还是会渲染整个页面**，性能有所提高就不刷新页面来是实现。
+***
+### 不刷新页面的方法，也就是只修改100这个数字文本，只要我们取到这个数字文本即可
+* 用[innerText](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/innerText)属性表示一个节点及其后代的“渲染”文本内容,用它来取这个100数字文本。
+* 前端代码修改为：
+```
+    img.onload=function(){
+      alert('success')
+      amount.innerText=amount.innerText-1
+    }
+```
