@@ -294,6 +294,55 @@ else if(path==='/pay' && method.toUpperCase()==='POST'){
 这样浏览器就会认为这个javascirpt是刚刚创建的，所以就去执行它啦。
 ***
 * 上面的这个方案叫做**SRJ(Server rendered javascript),也就是服务器返回的javascript。**不是前端写的javascirpt，而是后台服务器返回的javascirpt。这个是在AJAX出现之前一些厉害的**后端程序员想出来的无刷新，局部更新页面内容的方案**。
+***
+* 接下来继续升级，首先我们要知道script是不受域名限制的，比如**我们随时都可以在jsbin中使用script来引入JQ，所以这就很容易说明不受域名限制**。但是也有不可以的情况，就是防盗链。或者有相关安全措施(比如验明是否为真实的用户，验证码，手机短信验证码等)的情况。
+### 所以这里的路径'/pay'如果写成'http://alipay.com/pay'就可以让阿里来打钱给我的网站
+* 所以这就是get请求的一个很大的漏洞，**一般打钱或者取钱不要使用get请求，都需要使用post请求**。
+* 前端部分代码修改为：
+```
+    script.src = 'http://alipay.com/pay?number=10000&user=bomber'//意思是让阿里支付一万元给bomber
+```
+* 就是当点击button的时候就可以请求阿里的网站。
+* 如果把button的点击代码直接放到外面，也可就是不用点击button也可以请求
+```
+<script>
+  let script = document.createElement('script')
+    script.src = 'http://alipay.com/pay?number=10000&user=bomber'//意思是让阿里支付一万元给bomber
+    document.body.appendChild(script)//script发请求必须要把它放到页面里面才能实现发请求的功能
+    script.onload = function (e) {
+      // alert('success')
+      // amount.innerText = amount.innerText - 1
+      e.currentTarget.remove()
+    }
+    script.onerror = function () {
+      alert('fail')
+      e.currentTarget.remove()
+    }
+</script>
+```
+<!-- * 以上都属于一种对网站的攻击，但是都是get请求。当然阿里pay肯定会把get变成post的，所以没有办法很容易的伪造来攻击它。
+* 另外提一下是先有JSONP，然后再有AJAX。
+### 做两个网站来测试
+* Windows 用户
+> Windows 没有 /etc/hosts 文件，请按照如下方法修改 hosts：
+> 用管理员身份打开记事本（在记事本的快捷方式图标上右键可以看到）
+> 用这个记事本打开 hosts（菜单->文件->定位到C:\Windows\System32\drivers\etc目录，然后切换到所有文件）
+* 我建立了两个域名，他们的IP地址都是一样的
+1. 127.0.0.1 bomber.com
+2. 127.0.0.1 bomber2.com
+* 然后我们在git bash上面运行两个端口，比如
+```
+PORT=8001 node index
+```
+另一个
+```
+PORT=8002 node index
+```
+* 这样就有**两个网站啦，但是他们对应的都是同一个IP**。
+* 对于目前的网站，他们两个的源代码也是一样的，因为和http://localhost 是一样的地址 -->
+
+
+
 
 
 
