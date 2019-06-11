@@ -14,18 +14,7 @@
   //   let newNumber=number-1
   //   amount.innerText=newNumber
   // })
-  let script = document.createElement('script')
-    script.src = 'http://alipay.com/pay?number=10000&user=bomber'//意思是让阿里支付一万元给bomber
-    document.body.appendChild(script)//script发请求必须要把它放到页面里面才能实现发请求的功能
-    script.onload = function (e) {
-      // alert('success')
-      // amount.innerText = amount.innerText - 1
-      e.currentTarget.remove()
-    }
-    script.onerror = function () {
-      alert('fail')
-      e.currentTarget.remove()
-    }
+
   button.addEventListener('click', function (e) {
     // let img=document.createElement('img')
     // img.src='/pay'
@@ -37,7 +26,18 @@
     //   alert('fail')
     // }
     //这里的alert提示成功与失败是给用户看到的，让用户了解到操作之后是成功了还是失败了。
-
+    let script = document.createElement('script')
+    script.src = 'http://bomber.com:8002/pay'
+    document.body.appendChild(script)//script发请求必须要把它放到页面里面才能实现发请求的功能
+    script.onload = function (e) {
+      // alert('success')
+      // amount.innerText = amount.innerText - 1
+      e.currentTarget.remove()
+    }
+    script.onerror = function () {
+      alert('fail')
+      e.currentTarget.remove()
+    }
     
 
   })

@@ -320,7 +320,7 @@ else if(path==='/pay' && method.toUpperCase()==='POST'){
     }
 </script>
 ```
-<!-- * 以上都属于一种对网站的攻击，但是都是get请求。当然阿里pay肯定会把get变成post的，所以没有办法很容易的伪造来攻击它。
+* 以上都属于一种对网站的攻击，但是都是get请求。当然阿里pay肯定会把get变成post的，所以没有办法很容易的伪造来攻击它。
 * 另外提一下是先有JSONP，然后再有AJAX。
 ### 做两个网站来测试
 * Windows 用户
@@ -339,7 +339,19 @@ PORT=8001 node index
 PORT=8002 node index
 ```
 * 这样就有**两个网站啦，但是他们对应的都是同一个IP**。
-* 对于目前的网站，他们两个的源代码也是一样的，因为和http://localhost 是一样的地址 -->
+* 对于目前的网站，他们两个的源代码也是一样的，因为和http://localhost 是一样的地址
+* 这里我把前端路径部分代码修改一点：
+```
+    script.src = 'http://bomber.com:8002/pay'
+
+```
+* 我们打开网站bomber2，可以通过http://bomber2.com:8002/ 查询到'/pay'的路径是在bomber.com的域名里面获取到的。
+* 可以在pay的preview里面看到,这个bomber.com返回的一段script。
+```
+amount.innerText=amount.innerText-1
+```
+* 此时通过**bomber2网站**打的是**bomber网站**的钱。
+* 所以再次证明网站之间是可以实现调用对方的script的。
 
 
 
