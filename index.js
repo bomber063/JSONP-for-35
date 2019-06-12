@@ -37,9 +37,7 @@ var server = http.createServer(function (request, response) {
     fs.writeFileSync('./db', newAmout)//重新往文件数据中写入一个新的数字
     response.setHeader('Content-Type', 'application/javascript')//script请求需要把类型修改了
     response.statusCode = 200
-    response.write(`
-    amount.innerText=amount.innerText-1
-    `)//script请求就写上提供前端可以执行的代码，这里用到多行字符串
+    response.write(`xxx.call(undefined,'success')`)//这只是用来调用前端提供的xxx函数.
     response.end()
   } else {
     response.statusCode = 404
