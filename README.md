@@ -448,6 +448,44 @@ amount.innerText=amount.innerText-1
 * 合起来就叫做String+Padding=StringP
 * 实际就是利用动态script标签进行跨域请求的一个技术
 
+## JSONP的最后总结
+* JSONP
+* 请求方：bomber2.com的前端程序员(其实就是指浏览器执行的)
+* 响应方：另一个网站bomber.com的后端程序员(其实就是指服务器执行)
+1. 请求放创建script标签,src指向响应方,同时穿一个查询参数，比如?callbackName=xxx，等于号后面的就是需要前端部分定义的一个回调函数名字。
+2. 响应方根据查询参数callbackName,构造形如：
+    1. xxx.call(undefined,'你要的数据')
+    2. xxx('你要的数据')  
+    这样的响应
+3. 浏览器接收到响应，就会执行xxx.call(undefined,'你要的数据')
+4. 那么请求放就知道了他要的数据
+* 这就是JSONP，但是看不出来为什么叫做JSONP
+
+## 约定
+1. callbackName一般都必须叫做callback(在JQuery里面叫做jQuery_callback)
+2. xxx这个名字一般是个随机数，因为有可能同时调用十个网站的JSONP，每个网站想一个名字是不是很麻烦，并且这个函数调用后就会被删除掉，这样也不会出现函数名字重复的问题，不会污染全局变量啦，比如用jQuery12312442(),调用完后就删除它，用到这里用到[delete操作符](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/delete)
+* 删除script这个标签外，把回调函数一起也删除啦。
+* 所以前端代码增加定义一个函数名的操作：
+```
+    let script = document.createElement('script')
+    let functionName = 'bomber' + parseInt(Math.random() * 100000, 10)//因为Math.random()是小数（浮点数），一般不用小数，所以乘以十万,parseInt是取整数部分，后面的10是十进制。
+    window[functionName] = function (result) {
+      if (result = 'success') {
+        amount.innerText = amount.innerText - 1
+      } else {
+
+      }
+    }
+    script.src = 'http://bomber.com:8002/pay?callback='+functionName
+```
+
+* 并且在前后端都操作完后删除该函数名
+```
+      delete window[functionName]
+```
+
+
+
 
 
 

@@ -38,7 +38,7 @@ var server = http.createServer(function (request, response) {
     response.setHeader('Content-Type', 'application/javascript')//script请求需要把类型修改了
     response.statusCode = 200
     response.write(`
-      ${query.callbackName}.call(undefined,'success')
+      ${query.callback}.call(undefined,'success')
       `)
     //这只是用来调用前端提供的xxx函数.
     response.end()
