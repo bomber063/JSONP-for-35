@@ -15,8 +15,11 @@
   //   amount.innerText=newNumber
   // })
   window.xxx=function(result){
-    alert('这是bomber2网页的前端程序员写的前端代码')
-    alert(`bomber2网页的前端程序员得到bomber网页的后端返回的结果是${result}`)
+    if(result='success'){
+      amount.innerText=amount.innerText-1
+    }else{
+
+    }
   }
   button.addEventListener('click', function (e) {
     // let img=document.createElement('img')

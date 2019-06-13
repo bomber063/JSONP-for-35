@@ -398,6 +398,59 @@ amount.innerText=amount.innerText-1
 作者：一波万波 
 来源：CSDN 
 原文：[链接](https://blog.csdn.net/yibowanbo/article/details/80233083)
+***
+### 目前为止的回顾
+* 两个网站之间的交流可以用script来实现，因为script是不受域名限制。而AJAX是受域名限制。
+* 前端定义一个函数，后端来调用这个前端定义的函数，然后把参数传入到这个回调函数的第一个参数(除了this以外的第一个参数)。
+* 后端把前端传入的参数放到call前面，后端传递给前端的参数放到回调函数的第一个参数里面。
+
+### 把这个success字符串改成JSONP样式的对象就叫做JSON啦，然后加上左padding(左边距)和右padding(右边距)就是JSONP
+* [JSON](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/JSON)的语法必须要加用双引号
+* 例如后端代码修改为
+```
+      ${query.callbackName}.call(undefined,{
+        "success":true,
+        "left":${newAmount}
+      })
+```
+* 其中左边这一块叫做左padding(左边距)
+```
+      ${query.callbackName}.call(undefined,
+```
+* 中间这一块叫做JSON
+```
+                                           {
+        "success":true,
+        "left":${newAmount}
+      }
+```
+* 右边的一个反括号叫做右padding(右边距)
+```
+       )
+```
+* 合起来就叫做JSON+Padding=JSONP
+* 而前面我们只需要返回一个字符串'success',**以下的StringP只是用来理解**。
+```
+      ${query.callbackName}.call(undefined,'success')
+```
+* 其中左边这一块叫做左padding(左边距)
+```
+      ${query.callbackName}.call(undefined,
+```
+* 中间这一块叫做String
+```
+        'success'
+```
+* 右边的一个反括号叫做右padding(右边距)
+```
+       )
+```
+* 合起来就叫做String+Padding=StringP
+* 实际就是利用动态script标签进行跨域请求的一个技术
+
+
+
+
 
 
 
