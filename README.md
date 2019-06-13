@@ -375,6 +375,32 @@ amount.innerText=amount.innerText-1
 * 当点击按钮后，首先会弹出前端部分的提示——这是bomber2网页的前端程序员写的前端代码,然后会提示后端返回的提示——bomber2网页的前端程序员得到bomber网页的后端返回的结果是${result}，因为这里传的参数是success，那么提示就是———bomber2网页的前端程序员得到bomber网页的后端返回的结果是success。
 * 现在bomber.com后端的程序就不需要知道bomber2.com的前端网页的任何细节都没关系，只需要调用xxx这个函数就帮它做了想做的事情，因为bomber2.com的前端工程师已经定义好了xxx函数，bomber.com后端程序员只需要去调用这个函数，然后把结果告诉bomber2.com的前端部分即可。这两个网站就可以进行无缝的沟通啦。
 
+### 这个xxx函数怎么让后端知道
+* 可以通过查询参数传入
+* 后端代码
+```
+    response.write(`${query.callbackName}.call(undefined,'success')`)//这只是用来调用前端提供的xxx函数.
+```
+* 前端代码
+```
+    script.src = 'http://bomber.com:8002/pay?callbackName=xxx'
+```
+* 后端的query和前端的?callbackName=xxx是http对应的关系，这里并不是什么代码,也可以把前端部分的xxx改成yyy，后端代码完全不用改。
+### URL即统一资源定位符 (Uniform Resource Locator, URL)，完整的URL由这几个部分构成：
+* scheme://host:port/path?query#fragment
+* scheme:通信协议，常用的http,ftp,maito等。
+* host:主机，服务器(计算机)域名系统 (DNS) 主机名或 IP 地址。
+* port:端口号，整数，可选，省略时使用方案的默认端口，如http的默认端口为80。
+* path:路径，由零或多个”/”符号隔开的字符串，一般用来表示主机上的一个目录或文件地址。
+* **query**:查询，可选，用于给动态网页（如使用CGI、ISAPI、PHP/JSP/ASP/ASP.NET等技术制作的网页）传递参数，可有多个参数，用”&”符号隔开，每个参数的名和值用”=”符号隔开。
+* fragment:信息片断，字符串，用于指定网络资源中的片断。例如一个网页中有多个名词解释，可 - ##### 使用fragment直接定位到某一名词解释。(也称为锚点)
+--------------------- 
+作者：一波万波 
+来源：CSDN 
+原文：[链接](https://blog.csdn.net/yibowanbo/article/details/80233083)
+
+
+
 
 
 
