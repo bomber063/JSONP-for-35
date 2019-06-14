@@ -1,58 +1,43 @@
 <title>首页</title>
 <link rel="stylesheet" href="/style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <h5>你好，这是我的第一个页面</h5>
 <h5>您的账户余额是<span id="amount">&&&amount&&&</span></h5>
-<!-- <form action="/pay" method="post" target="aaa">
-  <input type="submit" value="付款1元">
-</form>  -->
+
 <button id='button'>付款1元</button>
-<!-- <iframe name='aaa'src="about:blank" frameborder="0" height="200"></iframe> -->
 <script>
-  // button.addEventListener('click',function(e){
-  //   let n=amount.innerText//n的类型是字符串
-  //   let number=parseInt(n,10)
-  //   let newNumber=number-1
-  //   amount.innerText=newNumber
-  // })
-
   button.addEventListener('click', function (e) {
-    // let img=document.createElement('img')
-    // img.src='/pay'
-    // img.onload=function(){
-    //   alert('success')
-    //   amount.innerText=amount.innerText-1
-    // }
-    // img.onerror=function(){
-    //   alert('fail')
-    // }
-    //这里的alert提示成功与失败是给用户看到的，让用户了解到操作之后是成功了还是失败了。
-    let script = document.createElement('script')
-    let functionName = 'bomber' + parseInt(Math.random() * 100000, 10)//因为Math.random()是小数（浮点数），一般不用小数，所以乘以十万,parseInt是取整数部分，后面的10是十进制。
-    window[functionName] = function (result) {
-      if (result = 'success') {
-        amount.innerText = amount.innerText - 1
-      } else {
-
+    $.ajax({
+      url: "http://bomber.com:8001/pay",
+      jsonp: "callback",//这个删除也不影响，因为默认就是callback
+      dataType: "jsonp",
+      success: function (response) {
+        if (response = 'success') {
+          amount.innerText = amount.innerText - 1
+        }
       }
-    }
-    script.src = 'http://bomber.com:8002/pay?callback='+functionName
-    document.body.appendChild(script)//script发请求必须要把它放到页面里面才能实现发请求的功能
-    script.onload = function (e) {
-      // alert('success')
-      // amount.innerText = amount.innerText - 1
-      e.currentTarget.remove()
-      delete window[functionName]
-    }
-    script.onerror = function () {
-      alert('fail')
-      e.currentTarget.remove()
-      delete window[functionName]
-    }
+    });
+    // let script = document.createElement('script')
+    // let functionName = 'bomber' + parseInt(Math.random() * 100000, 10)//因为Math.random()是小数（浮点数），一般不用小数，所以乘以十万,parseInt是取整数部分，后面的10是十进制。
+    // window[functionName] = function (result) {
+    //   if (result = 'success') {
+    //     amount.innerText = amount.innerText - 1
+    //   } else {
+
+    //   }
+    // }
+    // script.src = 'http://bomber.com:8002/pay?callback='+functionName
+    // document.body.appendChild(script)//script发请求必须要把它放到页面里面才能实现发请求的功能
+    // script.onload = function (e) {
+    //   // alert('success')
+    //   // amount.innerText = amount.innerText - 1
+    //   e.currentTarget.remove()
+    //   delete window[functionName]
+    // }
+    // script.onerror = function () {
+    //   alert('fail')
+    //   e.currentTarget.remove()
+    //   delete window[functionName]
+    // }
   })
 </script>
-<!-- <script >
-  function xxx(){
-    alert('我是xxx')
-  }
-</script>
-<script src="/main.js?callback=xxx"></script> -->

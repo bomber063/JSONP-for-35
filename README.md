@@ -483,8 +483,28 @@ amount.innerText=amount.innerText-1
 ```
       delete window[functionName]
 ```
-
-
+***
+## jQuery里面的JSONP
+* jQuery里面的JSONP说明[链接](https://learn.jquery.com/ajax/working-with-jsonp/)
+* jQuery里面的把JSONP放到AJAX里面了：
+* 举例代码：
+```
+<script>
+  button.addEventListener('click', function (e) {
+    $.ajax({
+      url: "http://bomber.com:8001/pay",
+      jsonp: "callback",//这个删除也不影响，因为默认就是callback
+      dataType: "jsonp",
+      success: function (response) {
+        if (response = 'success') {
+          amount.innerText = amount.innerText - 1
+        }
+      }
+    });
+  })
+```
+* jQ后端返回的信息，比如jQuery341014233197432177835_1560497741157.call(undefined,'success')
+* **虽然JQ里面吧JSONP放到AJAX里面，但是JSONP并不是AJAX**。
 
 
 
