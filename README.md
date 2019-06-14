@@ -505,6 +505,13 @@ amount.innerText=amount.innerText-1
 ```
 * jQ后端返回的信息，比如jQuery341014233197432177835_1560497741157.call(undefined,'success')
 * **虽然JQ里面吧JSONP放到AJAX里面，但是JSONP并不是AJAX**。
+***
+## 最后一个关于JSONP的面试题
+* 请问为什么JSONP为什么不支持POST
+* 回答
+1. 因为JSONP是通过动态创建script实现的。
+2. 动态创建script只能用GET，没有办法用POST
+* 另外script的src只能写入url,可以写入get数据，没办法写入post数据
 
 
 
