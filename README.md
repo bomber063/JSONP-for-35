@@ -146,7 +146,7 @@ else if(path==='/pay' && method.toUpperCase()==='POST'){
 ### 我们可以通过一个iframe控制只刷新iframe的页面
 * [form](https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/form)标签的MDN中关于target还有一个iframename的属性——iframename: 返回值在指定[iframe](https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/iframe)中加载。
 * src
-> 要嵌入的页面的URL。使用值about:blank来嵌入符合同源策略的空页面。另请注意，以编程方式删除<iframe>src属性（例如via Element.removeAttribute()）会导致about:blank在Firefox（从版本65），基于Chromium的浏览器和Safari / iOS的框架中加载。
+> 要嵌入的页面的URL。使用值about:blank来嵌入符合同源策略的空页面。另请注意，以编程方式删除iframe的src属性（例如via Element.removeAttribute()）会导致about:blank在Firefox（从版本65），基于Chromium的浏览器和Safari / iOS的框架中加载。
 
 * 前端代码修改如下：
 ```
@@ -172,7 +172,7 @@ else if(path==='/pay' && method.toUpperCase()==='POST'){
 * 这样之后我们通过点击button按钮后会看到开发者工具中的Network里面会有**一个路径为pay，并发出一个GET请求**。但是它的缺陷是没有办法来发出POST请求。
 接下来**我们需要知道图片请求成功的前后端如何实现，前端需要用到[onload](https://developer.mozilla.org/zh-CN/docs/Web/API/GlobalEventHandlers/onload)和[onerror](https://developer.mozilla.org/zh-CN/docs/Web/API/GlobalEventHandlers/onerror)**
 * GlobalEventHandlers mixin 的 onload 属性是一个事件处理程序用于处理Window, XMLHttpRequest, <img> 等元素的加载事件，当资源已加载时被触发。
-* 当一项资源（如<img>或<script>）加载失败，加载资源的元素会触发一个Event接口的error事件，并执行该元素上的onerror()处理函数。这些error事件不会向上冒泡到window，不过（至少在Firefox中）能被单一的window.addEventListener捕获。
+* 当一项资源（如img或script）加载失败，加载资源的元素会触发一个Event接口的error事件，并执行该元素上的onerror()处理函数。这些error事件不会向上冒泡到window，不过（至少在Firefox中）能被单一的window.addEventListener捕获。
 * **那么后端的也需要知道加载成功或者失败，此时需要用到状态码**
 如果用img发请求，让后端告诉你成功，必须要有真正的图片才可以，需要后端写出如下代码
 ```
